@@ -1,8 +1,9 @@
 """
-Cosmetic2 — higher-fidelity editorial cosmetics landing page package.
+Cosmetic3 — cinematic, motion-heavy premium cosmetics landing page package.
 
-This version uses richer multi-agent copy generation and assembles a more
-designed storefront with the same product assets and brand brief as cosmetic1.
+This package spends more tokens than cosmetic1/2 by running a richer set of
+role-specific model calls and assembling a denser editorial storefront with
+motion layers, reveal choreography, and multiple narrative sections.
 """
 
 from urllib.parse import quote
@@ -91,148 +92,242 @@ product_lines = "\n".join(
 rag_context = "\n\n".join(item[0] + ":\n" + item[1] for item in sorted(rag_docs.items()))
 
 strategy_defaults = {
-    "positioning": "A quiet luxury skincare edit shaped around glow, tactility, and restraint.",
-    "moodline": "A shelf of soft light, subtle texture, and daily polish.",
-    "editorial_note": "Make the brand feel styled, calm, and modern rather than promotional.",
+    "positioning": "A cinematic skincare launch shaped around glow, materiality, and modern restraint.",
+    "moodline": "Soft chrome light, quiet glass reflections, and a vanity ritual staged like an editorial set.",
+    "visual_axis": "Rose warmth meets lilac sheen and pale mineral neutrals.",
+    "hero_scene": "Three products suspended in an atmosphere of slow light and floating texture.",
+    "launch_phrase": "A routine presented with the drama of a beauty film and the calm of a private ritual.",
 }
 
 strategy_prompt = (
-    "Build a concise creative direction for a luxury cosmetics storefront.\n\n"
+    "Build a premium visual strategy for a cinematic skincare storefront.\n\n"
     "Brand: " + brand + "\n"
     "Tagline: " + tagline + "\n"
     "Audience: " + audience + "\n"
-    "Theme: " + theme + "\n"
+    "Theme: " + theme + "\n\n"
     "Products:\n" + product_lines + "\n\n"
     "Features:\n" + feature_lines + "\n\n"
     "RAG notes:\n" + rag_context + "\n\n"
-    "Return exactly three lines:\n"
+    "Return exactly five lines:\n"
     "positioning: ...\n"
     "moodline: ...\n"
-    "editorial_note: ..."
+    "visual_axis: ...\n"
+    "hero_scene: ...\n"
+    "launch_phrase: ..."
 )
 
 strategy_raw = chat_role(
     "brand_strategist",
-    "Define concise luxury-beauty positioning and art direction cues.",
+    "Create a luxury-beauty launch concept with cinematic visual language and strong art direction.",
     strategy_prompt,
 )
 strategy = parse_fields(strategy_raw, strategy_defaults)
 
-copy_defaults = {
-    "badge": "Editorial glow edit",
-    "hero_title": "Skincare composed with the softness of a morning ritual.",
-    "hero_body": "Three formulas designed to cleanse, refine, and cushion the skin with a polished, premium calm.",
-    "primary_cta": "Shop the collection",
-    "secondary_cta": "See the ritual",
-    "section_title": "A complete shelf-worthy routine in three precise textures.",
-    "section_body": "Each formula carries a distinct tactile role, but the trio reads as one composed ritual.",
-    "ritual_title": "The routine is built to feel elegant at every step.",
-    "ritual_body": "Fresh gel, glassy treatment, and velvety barrier care create a sequence that looks as good as it feels.",
-    "footer_note": "Clean formulas, refined textures, and modern vanity presence.",
+campaign_defaults = {
+    "badge": "Launch sequence",
+    "hero_title": "Skincare staged with the glow, motion, and atmosphere of a beauty short film.",
+    "hero_body": "A three-piece ritual for cleansing, glass-skin brightness, and barrier comfort, presented with quiet drama and tactile polish.",
+    "primary_cta": "Enter the launch",
+    "secondary_cta": "Watch the ritual",
+    "marquee": "Clinical glow. Slow motion texture. Vanity-light calm. Editorial skin ritual.",
+    "manifesto_title": "A shelf that looks lit from within.",
+    "manifesto_body": "The ritual is built to feel composed in motion: a clean beginning, a reflective middle layer, and a final velvet seal.",
+    "ritual_title": "Three textures move like one continuous gesture.",
+    "ritual_body": "Fresh gel clarity, liquid light treatment, and plush barrier finish unfold as a measured sequence rather than three isolated products.",
+    "section_title": "A launch composition built around three formulas and one luminous point of view.",
+    "section_body": "The range reads like a beauty editorial: distinct silhouettes, distinct textures, and a single cinematic mood.",
 }
 
-copy_prompt = (
-    "Write high-end beauty commerce copy using the strategy below.\n\n"
+campaign_prompt = (
+    "Write cinematic luxury-beauty campaign copy using the strategy below.\n\n"
     "Positioning: " + strategy["positioning"] + "\n"
     "Moodline: " + strategy["moodline"] + "\n"
-    "Editorial note: " + strategy["editorial_note"] + "\n\n"
+    "Visual axis: " + strategy["visual_axis"] + "\n"
+    "Hero scene: " + strategy["hero_scene"] + "\n"
+    "Launch phrase: " + strategy["launch_phrase"] + "\n\n"
     "Brand: " + brand + "\n"
     "Tagline: " + tagline + "\n"
     "Audience: " + audience + "\n"
     "Products:\n" + product_lines + "\n\n"
-    "Return exactly ten lines:\n"
+    "Return exactly twelve lines:\n"
     "badge: ...\n"
     "hero_title: ...\n"
     "hero_body: ...\n"
     "primary_cta: ...\n"
     "secondary_cta: ...\n"
-    "section_title: ...\n"
-    "section_body: ...\n"
+    "marquee: ...\n"
+    "manifesto_title: ...\n"
+    "manifesto_body: ...\n"
     "ritual_title: ...\n"
     "ritual_body: ...\n"
-    "footer_note: ..."
+    "section_title: ...\n"
+    "section_body: ..."
 )
 
-copy_raw = chat_role(
-    "copywriter",
-    "Write refined editorial beauty copy with short, elegant lines and strong rhythm.",
-    copy_prompt,
+campaign_raw = chat_role(
+    "campaign_writer",
+    "Write elevated campaign copy with cinematic image-making, strong rhythm, and short luxurious sentences.",
+    campaign_prompt,
 )
-copy = parse_fields(copy_raw, copy_defaults)
+campaign = parse_fields(campaign_raw, campaign_defaults)
 
-merch_defaults = {
-    "spotlight_title": "Three textures, one luminous rhythm.",
-    "spotlight_body": "A cleanser for clarity, a serum for glass-skin sheen, and a cream that seals everything in with plush comfort.",
-    "texture_note": "Designed to move from airy cleanse to watery glow to soft final cushion.",
+motion_defaults = {
+    "motion_concept": "Float, shimmer, drift, and reveal with the pace of a luxury campaign microsite.",
+    "motion_tagline": "Everything should feel suspended in slow editorial motion.",
+    "aura_label": "Aurora glow field",
+    "sequence_label": "Launch sequence",
+    "texture_label": "Texture in motion",
+    "shimmer_label": "Glass-skin shimmer pass",
+    "rail_phrase": "Floating surfaces. Lit edges. Slow glow. Modern vanity theatre.",
+    "hover_phrase": "Objects should rise subtly, catch light, and settle back with softness.",
 }
 
-merch_prompt = (
-    "Create compact merchandising copy for a premium skincare landing page.\n\n"
-    "Brand: " + brand + "\n"
-    "Products:\n" + product_lines + "\n\n"
-    "Return exactly three lines:\n"
-    "spotlight_title: ...\n"
-    "spotlight_body: ...\n"
-    "texture_note: ..."
-)
-
-merch_raw = chat_role(
-    "merch_editor",
-    "Sharpen the merchandising language so the lineup feels premium and tactile.",
-    merch_prompt,
-)
-merch = parse_fields(merch_raw, merch_defaults)
-
-review_defaults = copy_defaults.copy()
-review_defaults.update(merch_defaults)
-
-review_prompt = (
-    "Polish the final copy set for a premium cosmetics landing page.\n\n"
+motion_prompt = (
+    "Define motion direction for a premium cosmetics landing page.\n\n"
+    "Strategy:\n"
     "Positioning: " + strategy["positioning"] + "\n"
     "Moodline: " + strategy["moodline"] + "\n"
-    "Editorial note: " + strategy["editorial_note"] + "\n\n"
-    "Copy set:\n"
-    "badge: " + copy["badge"] + "\n"
-    "hero_title: " + copy["hero_title"] + "\n"
-    "hero_body: " + copy["hero_body"] + "\n"
-    "primary_cta: " + copy["primary_cta"] + "\n"
-    "secondary_cta: " + copy["secondary_cta"] + "\n"
-    "section_title: " + copy["section_title"] + "\n"
-    "section_body: " + copy["section_body"] + "\n"
-    "ritual_title: " + copy["ritual_title"] + "\n"
-    "ritual_body: " + copy["ritual_body"] + "\n"
-    "footer_note: " + copy["footer_note"] + "\n"
-    "spotlight_title: " + merch["spotlight_title"] + "\n"
-    "spotlight_body: " + merch["spotlight_body"] + "\n"
-    "texture_note: " + merch["texture_note"] + "\n\n"
-    "Return the same thirteen lines, polished but still concise."
+    "Hero scene: " + strategy["hero_scene"] + "\n\n"
+    "Return exactly eight lines:\n"
+    "motion_concept: ...\n"
+    "motion_tagline: ...\n"
+    "aura_label: ...\n"
+    "sequence_label: ...\n"
+    "texture_label: ...\n"
+    "shimmer_label: ...\n"
+    "rail_phrase: ...\n"
+    "hover_phrase: ..."
 )
 
-reviewed_raw = chat_role(
+motion_raw = chat_role(
+    "motion_director",
+    "Describe premium, restrained motion cues for a cinematic beauty landing page.",
+    motion_prompt,
+)
+motion = parse_fields(motion_raw, motion_defaults)
+
+conversion_defaults = {
+    "spotlight_title": "A launch ritual built to be watched, hovered, and shopped.",
+    "spotlight_body": "The collection balances shelf appeal with a clearly merchandised route into purchase, keeping the experience luxurious but legible.",
+    "detail_note": "Each card should feel collectible, tactile, and softly theatrical.",
+    "footer_note": "Luxury skincare composed for motion, display, and daily ritual.",
+    "product_1_story": "An airy first cleanse that clears the frame and resets the skin.",
+    "product_2_story": "A glassy treatment layer that catches light and smooths the whole composition.",
+    "product_3_story": "A velvet final step that seals the ritual with softness and calm.",
+}
+
+conversion_prompt = (
+    "Write merchandising and conversion copy for a cinematic beauty storefront.\n\n"
+    "Brand: " + brand + "\n"
+    "Products:\n" + product_lines + "\n\n"
+    "Return exactly seven lines:\n"
+    "spotlight_title: ...\n"
+    "spotlight_body: ...\n"
+    "detail_note: ...\n"
+    "footer_note: ...\n"
+    "product_1_story: ...\n"
+    "product_2_story: ...\n"
+    "product_3_story: ..."
+)
+
+conversion_raw = chat_role(
+    "conversion_editor",
+    "Refine the page so it still converts while preserving a luxurious editorial feel.",
+    conversion_prompt,
+)
+conversion = parse_fields(conversion_raw, conversion_defaults)
+
+review_defaults = {}
+for item in strategy_defaults:
+    review_defaults[item] = strategy_defaults[item]
+for item in campaign_defaults:
+    review_defaults[item] = campaign_defaults[item]
+for item in motion_defaults:
+    review_defaults[item] = motion_defaults[item]
+for item in conversion_defaults:
+    review_defaults[item] = conversion_defaults[item]
+
+review_prompt = (
+    "Polish the full launch copy set so it feels premium, coherent, and display-ready.\n\n"
+    "Strategy:\n"
+    "positioning: " + strategy["positioning"] + "\n"
+    "moodline: " + strategy["moodline"] + "\n"
+    "visual_axis: " + strategy["visual_axis"] + "\n"
+    "hero_scene: " + strategy["hero_scene"] + "\n"
+    "launch_phrase: " + strategy["launch_phrase"] + "\n\n"
+    "Campaign:\n"
+    "badge: " + campaign["badge"] + "\n"
+    "hero_title: " + campaign["hero_title"] + "\n"
+    "hero_body: " + campaign["hero_body"] + "\n"
+    "primary_cta: " + campaign["primary_cta"] + "\n"
+    "secondary_cta: " + campaign["secondary_cta"] + "\n"
+    "marquee: " + campaign["marquee"] + "\n"
+    "manifesto_title: " + campaign["manifesto_title"] + "\n"
+    "manifesto_body: " + campaign["manifesto_body"] + "\n"
+    "ritual_title: " + campaign["ritual_title"] + "\n"
+    "ritual_body: " + campaign["ritual_body"] + "\n"
+    "section_title: " + campaign["section_title"] + "\n"
+    "section_body: " + campaign["section_body"] + "\n\n"
+    "Motion:\n"
+    "motion_concept: " + motion["motion_concept"] + "\n"
+    "motion_tagline: " + motion["motion_tagline"] + "\n"
+    "aura_label: " + motion["aura_label"] + "\n"
+    "sequence_label: " + motion["sequence_label"] + "\n"
+    "texture_label: " + motion["texture_label"] + "\n"
+    "shimmer_label: " + motion["shimmer_label"] + "\n"
+    "rail_phrase: " + motion["rail_phrase"] + "\n"
+    "hover_phrase: " + motion["hover_phrase"] + "\n\n"
+    "Conversion:\n"
+    "spotlight_title: " + conversion["spotlight_title"] + "\n"
+    "spotlight_body: " + conversion["spotlight_body"] + "\n"
+    "detail_note: " + conversion["detail_note"] + "\n"
+    "footer_note: " + conversion["footer_note"] + "\n"
+    "product_1_story: " + conversion["product_1_story"] + "\n"
+    "product_2_story: " + conversion["product_2_story"] + "\n"
+    "product_3_story: " + conversion["product_3_story"] + "\n\n"
+    "Return the same thirty-two lines with the same keys, only polished."
+)
+
+review_raw = chat_role(
     "reviewer",
-    "Edit the full copy set so it reads expensive, coherent, and display-ready.",
+    "Act as the final editorial reviewer for a high-budget beauty launch microsite. Keep the output rich but concise.",
     review_prompt,
 )
-final_copy = parse_fields(reviewed_raw, review_defaults)
+final_copy = parse_fields(review_raw, review_defaults)
+
+product_story_keys = [
+    "product_1_story",
+    "product_2_story",
+    "product_3_story",
+]
 
 cards_html = []
 for index in range(len(products)):
     product = products[index]
+    story_key = product_story_keys[index]
     image_src = encode_svg_data_uri(SVG_LIBRARY[product["name"]])
     card_html = (
-        '<article class="product-card">'
+        '<article class="product-card reveal" style="transition-delay: '
+        + str(index * 120)
+        + 'ms;">'
+        + '<div class="product-shell">'
+        + '<div class="product-aura"></div>'
         + '<div class="product-frame"><img src="'
         + image_src
         + '" alt="'
         + product["name"]
         + '" /></div>'
+        + "</div>"
         + '<div class="product-copy">'
-        + '<p class="step">0'
+        + '<p class="step">STEP 0'
         + str(index + 1)
         + "</p>"
         + "<h3>"
         + product["name"]
         + "</h3>"
+        + '<p class="story">'
+        + final_copy[story_key]
+        + "</p>"
         + "<p>"
         + product["description"]
         + "</p>"
@@ -244,10 +339,31 @@ for index in range(len(products)):
     )
     cards_html.append(card_html)
 
-benefits_html = "".join(
-    '<li><span class="mark"></span><span>' + item + "</span></li>"
-    for item in features
-)
+benefits_html = ""
+for feature in features:
+    benefits_html += (
+        '<li><span class="mark"></span><span>' + feature + "</span></li>"
+    )
+
+ritual_steps_html = ""
+for index in range(len(products)):
+    product = products[index]
+    story_key = product_story_keys[index]
+    ritual_steps_html += (
+        '<article class="ritual-step reveal" style="transition-delay: '
+        + str(index * 100)
+        + 'ms;">'
+        + "<strong>0"
+        + str(index + 1)
+        + "</strong>"
+        + "<h4>"
+        + product["name"]
+        + "</h4>"
+        + "<p>"
+        + final_copy[story_key]
+        + "</p>"
+        + "</article>"
+    )
 
 hero_src = encode_svg_data_uri(SVG_LIBRARY[products[1]["name"]])
 left_src = encode_svg_data_uri(SVG_LIBRARY[products[0]["name"]])
@@ -262,16 +378,16 @@ html = """
   <title>__BRAND__</title>
   <style>
     :root {
-      --ink: #17181e;
-      --muted: #6a6568;
-      --stone: #f3ece7;
-      --sand: #fff9f6;
-      --rose: #d9919d;
-      --plum: #6f668f;
-      --sage: #cad6d8;
-      --glass: rgba(255,255,255,0.68);
-      --line: rgba(23,24,30,0.08);
-      --shadow: 0 30px 90px rgba(64, 45, 44, 0.12);
+      --ink: #14151b;
+      --muted: #6c6870;
+      --paper: #f7f0ea;
+      --glass: rgba(255,255,255,0.64);
+      --rose: #d78f9a;
+      --violet: #9383c9;
+      --mist: #cad8dd;
+      --line: rgba(20,21,27,0.08);
+      --shadow: 0 36px 120px rgba(61, 41, 45, 0.16);
+      --shadow-soft: 0 18px 44px rgba(61, 41, 45, 0.10);
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -280,19 +396,49 @@ html = """
       color: var(--ink);
       font-family: "Helvetica Neue", Arial, sans-serif;
       background:
-        radial-gradient(circle at 10% 10%, rgba(255,255,255,0.9), transparent 26%),
-        radial-gradient(circle at 88% 16%, rgba(217,145,157,0.18), transparent 24%),
-        linear-gradient(180deg, #f8f0ea 0%, #f0e6e1 44%, #eee9e7 100%);
+        radial-gradient(circle at 10% 10%, rgba(255,255,255,0.92), transparent 24%),
+        radial-gradient(circle at 86% 12%, rgba(147,131,201,0.22), transparent 26%),
+        radial-gradient(circle at 80% 86%, rgba(215,143,154,0.18), transparent 20%),
+        linear-gradient(180deg, #fbf3ed 0%, #f3e8e1 42%, #efe8e6 100%);
+      overflow-x: hidden;
     }
-    .shell { max-width: 1260px; margin: 0 auto; padding: 26px; }
-    .nav, .hero, .quote-band, .spotlight, footer {
-      backdrop-filter: blur(20px);
+    .ambient,
+    .ambient::before,
+    .ambient::after {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      content: "";
+    }
+    .ambient::before {
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255,255,255,0.55), transparent 20%),
+        radial-gradient(circle at 82% 18%, rgba(215,143,154,0.22), transparent 22%),
+        radial-gradient(circle at 74% 80%, rgba(147,131,201,0.18), transparent 20%);
+      animation: auraDrift 14s ease-in-out infinite alternate;
+    }
+    .ambient::after {
+      background:
+        linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.22) 48%, transparent 76%);
+      transform: translateX(-120%);
+      animation: shineSweep 12s linear infinite;
+      opacity: 0.55;
+    }
+    .shell {
+      position: relative;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 28px;
+      z-index: 2;
+    }
+    .nav, .hero, .marquee, .manifesto, .spotlight, .ritual, footer {
+      backdrop-filter: blur(22px);
       background: var(--glass);
       border: 1px solid rgba(255,255,255,0.64);
       box-shadow: var(--shadow);
     }
     .nav {
-      border-radius: 26px;
+      border-radius: 28px;
       padding: 16px 20px;
       display: flex;
       justify-content: space-between;
@@ -304,20 +450,21 @@ html = """
       align-items: center;
       gap: 14px;
       font-family: Georgia, serif;
-      letter-spacing: 0.03em;
       font-size: 22px;
+      letter-spacing: 0.03em;
     }
-    .wordmark .seed {
+    .seed {
       width: 18px;
       height: 18px;
       border-radius: 999px;
-      background: linear-gradient(135deg, var(--rose), #f3ccd2);
-      box-shadow: 0 0 0 9px rgba(217,145,157,0.12);
+      background: linear-gradient(135deg, var(--rose), #f2ccd2);
+      box-shadow: 0 0 0 9px rgba(215,143,154,0.12);
+      animation: pulseHalo 4.2s ease-in-out infinite;
     }
     .nav-meta {
       display: flex;
+      gap: 14px;
       align-items: center;
-      gap: 10px;
       color: var(--muted);
       font-size: 14px;
     }
@@ -325,61 +472,84 @@ html = """
       border: none;
       border-radius: 999px;
       padding: 12px 18px;
-      background: #fff;
-      font-weight: 700;
+      background: rgba(255,255,255,0.88);
       color: var(--ink);
+      font-weight: 700;
+      box-shadow: var(--shadow-soft);
     }
     .hero {
-      border-radius: 36px;
-      padding: 28px;
+      border-radius: 38px;
+      padding: 30px;
       display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
+      grid-template-columns: 1.04fr 0.96fr;
       gap: 24px;
       overflow: hidden;
+      position: relative;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(255,255,255,0.48), transparent 24%),
+        radial-gradient(circle at 80% 18%, rgba(147,131,201,0.16), transparent 24%),
+        radial-gradient(circle at 76% 76%, rgba(215,143,154,0.18), transparent 24%);
+      mix-blend-mode: screen;
+      animation: auraDrift 16s ease-in-out infinite alternate;
     }
     .eyebrow {
+      position: relative;
+      z-index: 1;
       display: inline-flex;
       align-items: center;
       gap: 10px;
       border-radius: 999px;
       padding: 8px 14px;
-      background: rgba(255,255,255,0.72);
-      color: #9f5662;
+      background: rgba(255,255,255,0.76);
+      color: #a15763;
       text-transform: uppercase;
       font-size: 12px;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.16em;
     }
     h1 {
+      position: relative;
+      z-index: 1;
       margin: 18px 0 14px;
+      max-width: 700px;
       font-family: Georgia, serif;
-      font-size: clamp(48px, 7vw, 88px);
-      line-height: 0.92;
-      letter-spacing: -0.05em;
-      max-width: 680px;
+      font-size: clamp(54px, 7vw, 96px);
+      line-height: 0.9;
+      letter-spacing: -0.06em;
     }
-    .lede {
-      max-width: 540px;
+    .lede, .sublede {
+      position: relative;
+      z-index: 1;
+      max-width: 560px;
       color: var(--muted);
+      line-height: 1.75;
       font-size: 18px;
-      line-height: 1.7;
-      margin: 0 0 24px;
+      margin: 0 0 14px;
     }
     .hero-actions {
+      position: relative;
+      z-index: 1;
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 28px;
+      margin: 24px 0 28px;
     }
     .hero-actions button, .hero-actions a {
       border: none;
       border-radius: 999px;
       padding: 14px 22px;
-      font-weight: 700;
       text-decoration: none;
+      font-weight: 700;
     }
     .hero-actions .primary { background: var(--ink); color: #fff; }
-    .hero-actions .secondary { background: rgba(255,255,255,0.76); color: var(--ink); }
+    .hero-actions .secondary { background: rgba(255,255,255,0.78); color: var(--ink); }
     .micro-grid {
+      position: relative;
+      z-index: 1;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
@@ -389,81 +559,140 @@ html = """
       background: rgba(255,255,255,0.72);
       border: 1px solid var(--line);
       padding: 16px;
+      box-shadow: var(--shadow-soft);
+      transform: translateY(0);
+      animation: slowLift 8s ease-in-out infinite;
     }
+    .micro-card:nth-child(2) { animation-delay: 1.2s; }
+    .micro-card:nth-child(3) { animation-delay: 2.4s; }
     .micro-card strong {
       display: block;
+      margin-bottom: 6px;
       font-family: Georgia, serif;
       font-size: 22px;
-      margin-bottom: 6px;
     }
-    .stage {
+    .hero-stage {
       position: relative;
-      min-height: 620px;
-      border-radius: 32px;
-      background:
-        radial-gradient(circle at top right, rgba(217,145,157,0.34), transparent 28%),
-        radial-gradient(circle at bottom left, rgba(202,214,216,0.42), transparent 28%),
-        rgba(255,255,255,0.66);
+      min-height: 700px;
+      border-radius: 34px;
       overflow: hidden;
+      background:
+        radial-gradient(circle at 80% 18%, rgba(255,255,255,0.34), transparent 18%),
+        radial-gradient(circle at 22% 78%, rgba(202,216,221,0.42), transparent 20%),
+        linear-gradient(180deg, rgba(255,255,255,0.54), rgba(255,255,255,0.18));
     }
-    .stage img {
+    .hero-stage::before {
+      content: "";
+      position: absolute;
+      inset: 12% 18% auto auto;
+      width: 180px;
+      height: 180px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255,255,255,0.42), transparent 68%);
+      filter: blur(10px);
+      animation: haloFloat 7s ease-in-out infinite;
+    }
+    .hero-stage .product {
       position: absolute;
       display: block;
-      filter: drop-shadow(0 30px 52px rgba(62, 42, 47, 0.18));
+      filter: drop-shadow(0 34px 64px rgba(51, 37, 44, 0.18));
+      transform-origin: center;
+      transition: transform 0.5s ease;
     }
-    .stage .center {
+    .hero-stage:hover .product { transform: translateY(-8px) scale(1.02); }
+    .hero-stage .center {
       width: 54%;
       left: 23%;
-      top: 9%;
+      top: 6%;
+      animation: heroFloat 7.8s ease-in-out infinite;
+      z-index: 3;
     }
-    .stage .left {
+    .hero-stage .left {
       width: 34%;
-      left: -4%;
-      bottom: -2%;
-      transform: rotate(-6deg);
+      left: -2%;
+      bottom: 2%;
+      transform: rotate(-7deg);
+      animation: heroFloatAlt 9.4s ease-in-out infinite;
+      z-index: 2;
     }
-    .stage .right {
+    .hero-stage .right {
       width: 34%;
-      right: -4%;
-      bottom: 4%;
-      transform: rotate(6deg);
+      right: -2%;
+      bottom: 8%;
+      transform: rotate(7deg);
+      animation: heroFloat 8.6s ease-in-out infinite;
+      z-index: 1;
     }
-    .quote-band {
+    .motion-tag {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(255,255,255,0.66);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      z-index: 4;
+      box-shadow: var(--shadow-soft);
+    }
+    .marquee {
       margin-top: 18px;
-      border-radius: 28px;
+      border-radius: 24px;
+      overflow: hidden;
+      padding: 14px 0;
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      gap: 28px;
+      white-space: nowrap;
+      animation: railMove 18s linear infinite;
+      padding-left: 20px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8e5863;
+      font-size: 12px;
+    }
+    .manifesto {
+      margin-top: 18px;
+      border-radius: 32px;
       padding: 24px 26px;
       display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
+      grid-template-columns: 0.96fr 1.04fr;
       gap: 20px;
       align-items: center;
     }
-    .quote-band h2,
+    .manifesto h2,
+    .section-head h2,
     .spotlight h2,
-    .products-head h2 {
+    .ritual h2 {
       margin: 0;
       font-family: Georgia, serif;
       letter-spacing: -0.04em;
     }
-    .quote-band h2 { font-size: clamp(30px, 4vw, 44px); }
-    .quote-band p {
+    .manifesto h2 { font-size: clamp(34px, 4vw, 50px); }
+    .manifesto p {
       margin: 0;
       color: var(--muted);
-      line-height: 1.7;
-      font-size: 16px;
+      line-height: 1.78;
     }
-    .products-head {
+    .section-head {
       display: flex;
       justify-content: space-between;
-      gap: 18px;
+      gap: 20px;
       align-items: end;
       margin: 42px 4px 18px;
     }
-    .products-head h2 { font-size: clamp(34px, 4vw, 52px); }
-    .products-head p {
+    .section-head h2 { font-size: clamp(38px, 4vw, 58px); }
+    .section-head p {
       margin: 0;
-      max-width: 420px;
+      max-width: 450px;
       color: var(--muted);
-      line-height: 1.7;
+      line-height: 1.75;
     }
     .products {
       display: grid;
@@ -471,18 +700,42 @@ html = """
       gap: 18px;
     }
     .product-card {
-      border-radius: 30px;
+      border-radius: 32px;
       padding: 18px;
-      background: rgba(255,255,255,0.76);
-      border: 1px solid rgba(255,255,255,0.72);
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(255,255,255,0.74);
       box-shadow: var(--shadow);
+      transform: translateY(0);
+      transition: transform 0.45s ease, box-shadow 0.45s ease;
     }
-    .product-frame {
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 44px 120px rgba(61, 41, 45, 0.18);
+    }
+    .product-shell {
+      position: relative;
       border-radius: 24px;
       overflow: hidden;
-      background: rgba(255,255,255,0.84);
+      background: rgba(255,255,255,0.86);
       aspect-ratio: 5 / 6;
       margin-bottom: 16px;
+    }
+    .product-aura {
+      position: absolute;
+      inset: auto;
+      width: 60%;
+      height: 24%;
+      left: 20%;
+      bottom: 5%;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(215,143,154,0.18), transparent 72%);
+      animation: auraPulse 5.2s ease-in-out infinite;
+    }
+    .product-frame {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
     }
     .product-frame img {
       width: 100%;
@@ -492,7 +745,7 @@ html = """
     }
     .step {
       margin: 0 0 8px;
-      color: #9f5662;
+      color: #9c5a66;
       font-size: 12px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
@@ -500,13 +753,17 @@ html = """
     .product-copy h3 {
       margin: 0 0 8px;
       font-family: Georgia, serif;
-      font-size: 29px;
-      line-height: 1.05;
+      font-size: 30px;
+      line-height: 1.04;
     }
     .product-copy p {
-      margin: 0 0 18px;
+      margin: 0 0 14px;
       color: var(--muted);
-      line-height: 1.65;
+      line-height: 1.72;
+    }
+    .story {
+      color: var(--ink);
+      font-weight: 600;
     }
     .row {
       display: flex;
@@ -517,13 +774,14 @@ html = """
     .price {
       font-size: 19px;
       font-weight: 700;
+      color: var(--ink);
     }
     .row button {
       border: none;
       border-radius: 999px;
+      padding: 12px 18px;
       background: var(--ink);
       color: #fff;
-      padding: 12px 18px;
       font-weight: 700;
     }
     .spotlight {
@@ -534,15 +792,15 @@ html = """
       grid-template-columns: 1fr 1fr;
       gap: 20px;
     }
-    .spotlight h2 { font-size: clamp(32px, 4vw, 46px); }
+    .spotlight h2 { font-size: clamp(34px, 4vw, 48px); }
     .spotlight p {
-      margin: 0;
+      margin: 0 0 14px;
       color: var(--muted);
-      line-height: 1.75;
+      line-height: 1.78;
     }
     .benefits {
       list-style: none;
-      margin: 0;
+      margin: 10px 0 0;
       padding: 0;
       display: grid;
       gap: 12px;
@@ -563,9 +821,58 @@ html = """
       background: linear-gradient(135deg, var(--rose), #f1cdd3);
       flex: none;
     }
+    .ritual {
+      margin-top: 22px;
+      border-radius: 34px;
+      padding: 24px;
+    }
+    .ritual-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+    .ritual-header h2 { font-size: clamp(34px, 4vw, 48px); }
+    .ritual-header p {
+      margin: 0;
+      max-width: 500px;
+      color: var(--muted);
+      line-height: 1.78;
+    }
+    .ritual-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .ritual-step {
+      border-radius: 24px;
+      padding: 20px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+    }
+    .ritual-step strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #9c5a66;
+      letter-spacing: 0.18em;
+      font-size: 12px;
+    }
+    .ritual-step h4 {
+      margin: 0 0 8px;
+      font-family: Georgia, serif;
+      font-size: 28px;
+      line-height: 1.06;
+    }
+    .ritual-step p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.72;
+    }
     footer {
       margin-top: 24px;
-      border-radius: 28px;
+      border-radius: 30px;
       padding: 20px 22px;
       display: flex;
       justify-content: space-between;
@@ -578,94 +885,206 @@ html = """
       color: var(--ink);
       font-size: 22px;
     }
-    @media (max-width: 1024px) {
-      .hero, .quote-band, .spotlight, .products { grid-template-columns: 1fr; }
-      .products-head, footer { display: block; }
-      .stage { min-height: 520px; }
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @keyframes heroFloat {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-14px) rotate(1.2deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+    @keyframes heroFloatAlt {
+      0% { transform: translateY(0px) rotate(-7deg); }
+      50% { transform: translateY(-12px) rotate(-4deg); }
+      100% { transform: translateY(0px) rotate(-7deg); }
+    }
+    @keyframes auraDrift {
+      0% { transform: translate3d(0, 0, 0) scale(1); }
+      100% { transform: translate3d(1.5%, -1.5%, 0) scale(1.04); }
+    }
+    @keyframes shineSweep {
+      0% { transform: translateX(-120%); }
+      100% { transform: translateX(120%); }
+    }
+    @keyframes pulseHalo {
+      0%, 100% { box-shadow: 0 0 0 9px rgba(215,143,154,0.12); }
+      50% { box-shadow: 0 0 0 15px rgba(215,143,154,0.06); }
+    }
+    @keyframes haloFloat {
+      0% { transform: translateY(0px) scale(1); opacity: 0.8; }
+      50% { transform: translateY(-10px) scale(1.05); opacity: 1; }
+      100% { transform: translateY(0px) scale(1); opacity: 0.8; }
+    }
+    @keyframes railMove {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-30%); }
+    }
+    @keyframes slowLift {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes auraPulse {
+      0%, 100% { opacity: 0.45; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.06); }
+    }
+    @media (max-width: 1080px) {
+      .hero, .manifesto, .spotlight, .products, .ritual-grid { grid-template-columns: 1fr; }
+      .section-head, .ritual-header, footer { display: block; }
+      .hero-stage { min-height: 560px; }
       footer p { margin: 8px 0 0; }
     }
   </style>
 </head>
 <body>
+  <div class="ambient"></div>
   <div class="shell">
-    <header class="nav">
+    <header class="nav reveal is-visible">
       <div class="wordmark"><span class="seed"></span><strong>__BRAND__</strong></div>
       <div class="nav-meta"><span>__POSITIONING__</span><button class="bag" type="button">Bag (3)</button></div>
     </header>
-    <section class="hero">
+    <section class="hero reveal is-visible">
       <div>
         <span class="eyebrow">__BADGE__</span>
         <h1>__HERO_TITLE__</h1>
         <p class="lede">__HERO_BODY__</p>
+        <p class="sublede">__LAUNCH_PHRASE__</p>
         <div class="hero-actions">
           <button class="primary" type="button">__PRIMARY_CTA__</button>
           <a class="secondary" href="#collection">__SECONDARY_CTA__</a>
         </div>
         <div class="micro-grid">
-          <div class="micro-card"><strong>3 formulas</strong><span>Curated to read as one complete shelf edit.</span></div>
-          <div class="micro-card"><strong>Soft luxury</strong><span>Modern calm, luminous texture, no excess.</span></div>
-          <div class="micro-card"><strong>Daily ritual</strong><span>Built for vanity presence and everyday use.</span></div>
+          <article class="micro-card"><strong>__AURA_LABEL__</strong><span>__MOTION_TAGLINE__</span></article>
+          <article class="micro-card"><strong>__SEQUENCE_LABEL__</strong><span>__MOTION_CONCEPT__</span></article>
+          <article class="micro-card"><strong>__SHIMMER_LABEL__</strong><span>__HOVER_PHRASE__</span></article>
         </div>
       </div>
-      <div class="stage">
-        <img class="center" src="__HERO_SRC__" alt="__HERO_ALT__" />
-        <img class="left" src="__LEFT_SRC__" alt="__LEFT_ALT__" />
-        <img class="right" src="__RIGHT_SRC__" alt="__RIGHT_ALT__" />
+      <div class="hero-stage" id="hero-stage">
+        <img class="product center" src="__HERO_SRC__" alt="__HERO_ALT__" />
+        <img class="product left" src="__LEFT_SRC__" alt="__LEFT_ALT__" />
+        <img class="product right" src="__RIGHT_SRC__" alt="__RIGHT_ALT__" />
+        <div class="motion-tag">__TEXTURE_LABEL__</div>
       </div>
     </section>
-    <section class="quote-band">
-      <h2>__RITUAL_TITLE__</h2>
+    <section class="marquee reveal">
+      <div class="marquee-track">
+        <span>__MARQUEE__</span><span>__RAIL_PHRASE__</span><span>__VISUAL_AXIS__</span><span>__MARQUEE__</span><span>__RAIL_PHRASE__</span><span>__VISUAL_AXIS__</span>
+      </div>
+    </section>
+    <section class="manifesto reveal">
+      <h2>__MANIFESTO_TITLE__</h2>
       <div>
-        <p>__RITUAL_BODY__</p>
+        <p>__MANIFESTO_BODY__</p>
         <p style="margin-top:14px;"><strong style="color:var(--ink);">__MOODLINE__</strong></p>
       </div>
     </section>
-    <div class="products-head" id="collection">
+    <div class="section-head">
       <div>
-        <h2>__SECTION_TITLE__</h2>
+        <h2 id="collection">__SECTION_TITLE__</h2>
       </div>
       <p>__SECTION_BODY__</p>
     </div>
     <section class="products">
       __CARDS__
     </section>
-    <section class="spotlight">
+    <section class="spotlight reveal">
       <div>
         <h2>__SPOTLIGHT_TITLE__</h2>
       </div>
       <div>
         <p>__SPOTLIGHT_BODY__</p>
-        <p style="margin-top:14px;">__TEXTURE_NOTE__</p>
-        <ul class="benefits" style="margin-top:18px;">__BENEFITS__</ul>
+        <p>__DETAIL_NOTE__</p>
+        <ul class="benefits">__BENEFITS__</ul>
       </div>
     </section>
-    <footer>
+    <section class="ritual reveal">
+      <div class="ritual-header">
+        <div>
+          <h2>__RITUAL_TITLE__</h2>
+        </div>
+        <p>__RITUAL_BODY__</p>
+      </div>
+      <div class="ritual-grid">__RITUAL_STEPS__</div>
+    </section>
+    <footer class="reveal">
       <strong>__BRAND__</strong>
       <p>__FOOTER_NOTE__</p>
     </footer>
   </div>
+  <script>
+    (function () {
+      const revealItems = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      }, { threshold: 0.16 });
+      revealItems.forEach((item) => observer.observe(item));
+
+      const stage = document.getElementById('hero-stage');
+      if (!stage) return;
+
+      stage.addEventListener('mousemove', (event) => {
+        const rect = stage.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width - 0.5;
+        const y = (event.clientY - rect.top) / rect.height - 0.5;
+        const center = stage.querySelector('.center');
+        const left = stage.querySelector('.left');
+        const right = stage.querySelector('.right');
+        if (center) center.style.transform = `translate(${x * 10}px, ${y * 12}px)`;
+        if (left) left.style.transform = `translate(${x * -12}px, ${y * 8}px) rotate(-7deg)`;
+        if (right) right.style.transform = `translate(${x * 12}px, ${y * -8}px) rotate(7deg)`;
+      });
+
+      stage.addEventListener('mouseleave', () => {
+        const items = stage.querySelectorAll('.product');
+        items.forEach((item) => { item.style.transform = ''; });
+      });
+    }());
+  </script>
 </body>
 </html>
 """
 
 html = html.replace("__BRAND__", brand)
-html = html.replace("__POSITIONING__", strategy["positioning"])
+html = html.replace("__POSITIONING__", final_copy["positioning"])
 html = html.replace("__BADGE__", final_copy["badge"])
 html = html.replace("__HERO_TITLE__", final_copy["hero_title"])
 html = html.replace("__HERO_BODY__", final_copy["hero_body"])
+html = html.replace("__LAUNCH_PHRASE__", final_copy["launch_phrase"])
 html = html.replace("__PRIMARY_CTA__", final_copy["primary_cta"])
 html = html.replace("__SECONDARY_CTA__", final_copy["secondary_cta"])
-html = html.replace("__RITUAL_TITLE__", final_copy["ritual_title"])
-html = html.replace("__RITUAL_BODY__", final_copy["ritual_body"])
-html = html.replace("__MOODLINE__", strategy["moodline"])
+html = html.replace("__AURA_LABEL__", final_copy["aura_label"])
+html = html.replace("__SEQUENCE_LABEL__", final_copy["sequence_label"])
+html = html.replace("__SHIMMER_LABEL__", final_copy["shimmer_label"])
+html = html.replace("__MOTION_TAGLINE__", final_copy["motion_tagline"])
+html = html.replace("__MOTION_CONCEPT__", final_copy["motion_concept"])
+html = html.replace("__HOVER_PHRASE__", final_copy["hover_phrase"])
+html = html.replace("__TEXTURE_LABEL__", final_copy["texture_label"])
+html = html.replace("__MARQUEE__", final_copy["marquee"])
+html = html.replace("__RAIL_PHRASE__", final_copy["rail_phrase"])
+html = html.replace("__VISUAL_AXIS__", final_copy["visual_axis"])
+html = html.replace("__MANIFESTO_TITLE__", final_copy["manifesto_title"])
+html = html.replace("__MANIFESTO_BODY__", final_copy["manifesto_body"])
+html = html.replace("__MOODLINE__", final_copy["moodline"])
 html = html.replace("__SECTION_TITLE__", final_copy["section_title"])
 html = html.replace("__SECTION_BODY__", final_copy["section_body"])
 html = html.replace("__SPOTLIGHT_TITLE__", final_copy["spotlight_title"])
 html = html.replace("__SPOTLIGHT_BODY__", final_copy["spotlight_body"])
-html = html.replace("__TEXTURE_NOTE__", final_copy["texture_note"])
+html = html.replace("__DETAIL_NOTE__", final_copy["detail_note"])
+html = html.replace("__RITUAL_TITLE__", final_copy["ritual_title"])
+html = html.replace("__RITUAL_BODY__", final_copy["ritual_body"])
 html = html.replace("__FOOTER_NOTE__", final_copy["footer_note"])
 html = html.replace("__CARDS__", "".join(cards_html))
 html = html.replace("__BENEFITS__", benefits_html)
+html = html.replace("__RITUAL_STEPS__", ritual_steps_html)
 html = html.replace("__HERO_SRC__", hero_src)
 html = html.replace("__HERO_ALT__", products[1]["name"])
 html = html.replace("__LEFT_SRC__", left_src)
@@ -677,8 +1096,9 @@ checks = [
     "<!DOCTYPE html>" in html,
     brand.lower() in html.lower(),
     html.count("Add to bag") == 3,
-    html.count("data:image/svg+xml") >= 4,
-    "spotlight" in html.lower(),
+    html.count("data:image/svg+xml") >= 6,
+    "IntersectionObserver" in html,
+    "@keyframes heroFloat" in html,
 ]
 
 score = sum(1 for item in checks if item) / len(checks)
